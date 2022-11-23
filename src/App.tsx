@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { fetchQuizQuestions } from "./API";
 import QuestionCard from "./Components/QuestionCard";
+import Results from "./Components/Results";
 import { QuestionState, Difficulty } from "./API";
 import { GlobalStyle, Wrapper } from "./App.styles";
 
@@ -10,7 +11,7 @@ export type AnswerObject = {
   correct: boolean;
   correctAnswer: string;
 };
-const TOTAL_QUESTIONS = 10;
+const TOTAL_QUESTIONS = 5;
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -63,12 +64,11 @@ const App = () => {
       <GlobalStyle />
       <Wrapper>
         <h1>Quizey</h1>
-        {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
+        {gameOver ? (
           <button className="start" onClick={startTrivia}>
             Start
           </button>
         ) : null}
-        {!gameOver ? <p className="score">Score: {score}</p> : null}
         {loading ? <p>Loading Questions...</p> : null}
         {!loading && !gameOver && (
           <QuestionCard
@@ -87,6 +87,13 @@ const App = () => {
           <button className="next" onClick={nextQuestion}>
             Next Question
           </button>
+        ) : null}
+        {userAnswers.length === TOTAL_QUESTIONS ? (
+          <Results
+            score={score}
+            totalQuestions={TOTAL_QUESTIONS}
+            callback={startTrivia}
+          />
         ) : null}
       </Wrapper>
     </>
